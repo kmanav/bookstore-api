@@ -1,0 +1,62 @@
+---
+# Group/Team Definition
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: bookstore-team
+  description: Bookstore Platform Development Team
+spec:
+  type: team
+  profile:
+    displayName: Bookstore Team
+    email: bookstore-team@example.com
+  children: []
+
+---
+# System Definition
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: bookstore-platform
+  description: Online Bookstore Platform
+  tags:
+    - ecommerce
+    - bookstore
+spec:
+  owner: group:default/bookstore-team
+
+---
+# Database Resource
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: bookstore-db
+  description: Bookstore Database - PostgreSQL
+  tags:
+    - database
+    - postgresql
+spec:
+  type: database
+  owner: group:default/bookstore-team
+  system: bookstore-platform
+
+---
+# Application Component
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bookstore-api
+  description: Bookstore REST API - manages books, inventory, and orders
+  annotations:
+    github.com/project-slug: kmanav/bookstore-api
+  tags:
+    - java
+    - spring-boot
+    - rest-api
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/bookstore-team
+  system: bookstore-platform
+  dependsOn:
+    - resource:default/bookstore-db
